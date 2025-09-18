@@ -56,3 +56,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Removed duplicate `New<Type>Builder()` constructor from generated code.
+
+---
+
+## [v0.3.0] - 2025-09-20
+### Added
+- Support for `required:"true"` struct tag  
+  → generates runtime validation in `Build()`.
+- Support for `omitempty:"true"` struct tag  
+  → fields are skipped in `Build()` if they are zero values.
+- Extended test coverage for default, required, and omitempty.
+
+### Improved
+- More consistent code generation for field checks (`zeroCheck` helper).
+
+---
+

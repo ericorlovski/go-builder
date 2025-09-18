@@ -52,6 +52,26 @@ func TestGenerateWithDefaults(t *testing.T) {
 	}
 }
 
+func TestGenerateWithOmitempty(t *testing.T) {
+	meta := &model.StructMeta{
+		PackageName: "examples",
+		Name:        "User",
+		Fields: []model.Field{
+			{Name: "ID", Type: "int"},
+			{Name: "Name", Type: "string", Omitempty: true},
+		},
+	}
+
+	code, err := generator.Generate(meta)
+	if err != nil {
+		t.Fatalf("Error generating code: %v", err)
+	}
+
+	if !strings.Contains(code, "if !(b.name == \"\")") {
+		t.Errorf("Omitempty not generated for Name field:\n%s", code)
+	}
+}
+
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }

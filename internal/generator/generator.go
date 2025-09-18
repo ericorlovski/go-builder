@@ -34,12 +34,31 @@ func (b *{{$.Name}}Builder) With{{.Name}}(v {{.Type}}) *{{$.Name}}Builder {
 	return b
 }
 {{end}}
+
 func (b *{{.Name}}Builder) Build() {{.Name}} {
-	return {{.Name}}{
-		{{- range .Fields}}
-		{{.Name}}: b.{{lower .Name}},
-		{{- end}}
+	// Required checks
+	{{- range .Fields}}
+		{{- if .Required}}
+	if {{zeroCheck .Type (printf "b.%s" (lower .Name))}} {
+		panic("{{$.Name}}.{{.Name}} is required")
 	}
+		{{- end}}
+	{{- end}}
+
+	obj := {{.Name}}{}
+
+	// Assign fields
+	{{- range .Fields}}
+		{{- if .Omitempty}}
+	if !({{zeroCheck .Type (printf "b.%s" (lower .Name))}}) {
+		obj.{{.Name}} = b.{{lower .Name}}
+	}
+		{{- else}}
+	obj.{{.Name}} = b.{{lower .Name}}
+		{{- end}}
+	{{- end}}
+
+	return obj
 }
 `
 
@@ -50,6 +69,7 @@ func Generate(meta *model.StructMeta) (string, error) {
 				return s
 			}
 			if strings.ToUpper(s) == s {
+				// for cases like ID, UUID
 				return strings.ToLower(s)
 			}
 			return strings.ToLower(s[:1]) + s[1:]
@@ -67,7 +87,20 @@ func Generate(meta *model.StructMeta) (string, error) {
 				return fmt.Sprintf("%q", def)
 			}
 		},
+		"zeroCheck": func(typ, varName string) string {
+			switch typ {
+			case "int", "int64", "float64":
+				return fmt.Sprintf("%s == 0", varName)
+			case "string":
+				return fmt.Sprintf("%s == \"\"", varName)
+			case "bool":
+				return fmt.Sprintf("!%s", varName)
+			default:
+				return fmt.Sprintf("%s == nil", varName)
+			}
+		},
 	}
+
 	tmpl, err := template.New("builder").Funcs(funcs).Parse(builderTpl)
 	if err != nil {
 		return "", err

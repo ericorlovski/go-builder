@@ -1,9 +1,11 @@
 package model
 
 type Field struct {
-	Name    string
-	Type    string
-	Default *string // nil if no default
+	Name      string
+	Type      string
+	Default   *string
+	Required  bool
+	Omitempty bool
 }
 
 type StructMeta struct {

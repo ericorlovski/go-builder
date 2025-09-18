@@ -13,6 +13,9 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 - Works with `//go:generate` directive.
 - Simple CLI tool.
 - **New in v0.2.0:** Default values via struct tags (`default:"..."`).
+- **New in v0.3.0:**
+    - Required fields via struct tags (`required:"true"`).
+    - Omitempty support via struct tags (`omitempty:"true"`).
 
 ---
 

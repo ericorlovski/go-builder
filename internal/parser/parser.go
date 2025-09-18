@@ -40,17 +40,34 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 			typ := exprToString(field.Type)
 
 			var def *string
+			required := false
+			omitempty := false
+
 			if field.Tag != nil {
 				tag := reflect.StructTag(strings.Trim(field.Tag.Value, "`"))
+
+				// default:"..."
 				if val, ok := tag.Lookup("default"); ok {
 					def = &val
+				}
+
+				// required:"true"
+				if val, ok := tag.Lookup("required"); ok && val == "true" {
+					required = true
+				}
+
+				// omitempty
+				if _, ok := tag.Lookup("omitempty"); ok {
+					omitempty = true
 				}
 			}
 
 			meta.Fields = append(meta.Fields, model.Field{
-				Name:    name,
-				Type:    typ,
-				Default: def,
+				Name:      name,
+				Type:      typ,
+				Default:   def,
+				Required:  required,
+				Omitempty: omitempty,
 			})
 		}
 		return false
