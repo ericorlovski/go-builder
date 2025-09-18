@@ -1,0 +1,15 @@
+# Binaries
+/bin/
+/dist/
+/out/
+
+# IDE
+.idea/
+.vscode/
+
+# Go build cache
+*.exe
+*.out
+
+# Generated files
+examples/*_builder.go
