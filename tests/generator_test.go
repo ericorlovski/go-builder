@@ -11,7 +11,8 @@ import (
 
 func TestGenerate(t *testing.T) {
 	meta := &model.StructMeta{
-		Name: "User",
+		PackageName: "examples",
+		Name:        "User",
 		Fields: []model.Field{
 			{Name: "ID", Type: "int"},
 			{Name: "Name", Type: "string"},
@@ -27,8 +28,7 @@ func TestGenerate(t *testing.T) {
 		t.Errorf("Generated code missing methods:\n%s", code)
 	}
 
-	// Дополнительно можно записать во временный файл и прогнать go vet
-	_ = os.WriteFile("test_output.go", []byte(code), 0644)
+	_ = os.WriteFile(os.TempDir()+"/test_output.go", []byte(code), 0644)
 }
 
 func contains(s, substr string) bool {
