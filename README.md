@@ -5,19 +5,25 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 
 ---
 
-## ✨ Features
+## Features
 - Automatically generates builder structs for your Go types.
 - Chainable `With<Field>()` methods for each struct field.
 - `Build()` method to assemble the final struct.
-- Supports basic Go types: `int`, `string`, `bool`, `float64`.
+- Supports basic Go types: `int`, `string`, `bool`, `float64`, slices, maps, and pointers.
 - Works with `//go:generate` directive.
 - Simple CLI tool.
-- **New in v0.2.0:** Default values via struct tags (`default:"..."`).
-- **New in v0.3.0:** Required fields (`required:"true"`) and `omitempty:"true"`.
-- **New in v0.4.0:** Extended `omitempty` for slices, maps, and pointers.
+
+### Supported Struct Tags
+- `default:"..."` → assign default values.
+- `required:"true"` → enforce presence at build time.
+- `omitempty:"true"` → assign only if non-zero.
+- `validate:"..."` → simple validation rules:
+    - `min=<value>` → minimum numeric value
+    - `max=<value>` → maximum numeric value
+    - `email` → must contain `@`
 
 ---
 
-## 📦 Installation
+## Installation
 ```bash
 go install github.com/ericorlovski/go-builder/cmd/gobuilder@latest

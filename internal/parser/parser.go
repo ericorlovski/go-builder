@@ -42,6 +42,7 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 			var def *string
 			required := false
 			omitempty := false
+			var validate *string
 
 			if field.Tag != nil {
 				tag := reflect.StructTag(strings.Trim(field.Tag.Value, "`"))
@@ -56,9 +57,14 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 					required = true
 				}
 
-				// omitempty
+				// omitempty:"true"
 				if _, ok := tag.Lookup("omitempty"); ok {
 					omitempty = true
+				}
+
+				// validate:"..."
+				if val, ok := tag.Lookup("validate"); ok {
+					validate = &val
 				}
 			}
 
@@ -68,6 +74,7 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 				Default:   def,
 				Required:  required,
 				Omitempty: omitempty,
+				Validate:  validate,
 			})
 		}
 		return false

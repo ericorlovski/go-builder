@@ -6,6 +6,7 @@ type Field struct {
 	Default   *string
 	Required  bool
 	Omitempty bool
+	Validate  *string
 }
 
 type StructMeta struct {

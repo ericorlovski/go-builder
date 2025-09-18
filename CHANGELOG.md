@@ -88,3 +88,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `if b.ref != nil { ... }`
 
 ---
+
+## [v0.5.0] - 2025-09-18
+### Added
+- Support for `validate:"..."` struct tag.
+  - `min=<value>` and `max=<value>` for numeric fields.
+  - `email` check for string fields.
+- Validation checks are automatically generated inside `Build()`.
+
+### Changed
+- Improved code style for `omitempty` (uses `!=` and explicit checks).
+- Updated test cases to match new validation and omitempty rules.

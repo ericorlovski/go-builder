@@ -67,7 +67,7 @@ func TestGenerateWithOmitempty(t *testing.T) {
 		t.Fatalf("Error generating code: %v", err)
 	}
 
-	if !strings.Contains(code, "if !(b.name == \"\")") {
+	if !strings.Contains(code, "if b.name != \"\"") {
 		t.Errorf("Omitempty not generated for Name field:\n%s", code)
 	}
 }
@@ -99,6 +99,37 @@ func TestGenerateWithCollections(t *testing.T) {
 			t.Errorf("Missing check: %s\n%s", c, code)
 		}
 	}
+}
+
+func TestGenerateWithValidation(t *testing.T) {
+	meta := &model.StructMeta{
+		PackageName: "examples",
+		Name:        "User",
+		Fields: []model.Field{
+			{Name: "Age", Type: "int", Validate: strPtr("min=18,max=99")},
+			{Name: "Email", Type: "string", Validate: strPtr("email")},
+		},
+	}
+
+	code, err := generator.Generate(meta)
+	if err != nil {
+		t.Fatalf("Error: %v", err)
+	}
+
+	checks := []string{
+		"if b.age < 18 || b.age > 99 { panic(\"validation failed for b.age\") }",
+		"if !strings.Contains(b.email, \"@\") { panic(\"validation failed for b.email\") }",
+	}
+
+	for _, c := range checks {
+		if !strings.Contains(code, c) {
+			t.Errorf("Missing validation: %s\n%s", c, code)
+		}
+	}
+}
+
+func strPtr(s string) *string {
+	return &s
 }
 
 func contains(s, substr string) bool {

@@ -29,6 +29,7 @@ func New{{.Name}}Builder() *{{.Name}}Builder {
 }
 
 {{range .Fields}}
+// With{{.Name}} sets the {{.Name}} field for {{$.Name}}
 func (b *{{$.Name}}Builder) With{{.Name}}(v {{.Type}}) *{{$.Name}}Builder {
 	b.{{lower .Name}} = v
 	return b
@@ -43,6 +44,13 @@ func (b *{{.Name}}Builder) Build() {{.Name}} {
 		panic("{{$.Name}}.{{.Name}} is required")
 	}
 		{{- end}}
+	{{- end}}
+
+	// Validation checks
+	{{- range .Fields}}
+    	{{- if .Validate}}
+    {{renderValidation (printf "b.%s" (lower .Name)) .Type .Validate}}
+    	{{- end}}
 	{{- end}}
 
 	obj := {{.Name}}{}
@@ -121,6 +129,30 @@ func Generate(meta *model.StructMeta) (string, error) {
 			default:
 				return fmt.Sprintf("%s != nil", varName)
 			}
+		},
+		"renderValidation": func(name, typ string, rule *string) string {
+			if rule == nil {
+				return ""
+			}
+			parts := strings.Split(*rule, ",")
+			var checks []string
+			for _, p := range parts {
+				if strings.HasPrefix(p, "min=") {
+					val := strings.TrimPrefix(p, "min=")
+					checks = append(checks, fmt.Sprintf("%s < %s", name, val))
+				}
+				if strings.HasPrefix(p, "max=") {
+					val := strings.TrimPrefix(p, "max=")
+					checks = append(checks, fmt.Sprintf("%s > %s", name, val))
+				}
+				if p == "email" {
+					checks = append(checks, fmt.Sprintf("!strings.Contains(%s, \"@\")", name))
+				}
+			}
+			if len(checks) == 0 {
+				return ""
+			}
+			return fmt.Sprintf("if %s { panic(\"validation failed for %s\") }", strings.Join(checks, " || "), name)
 		},
 	}
 
