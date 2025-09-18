@@ -8,9 +8,9 @@ import (
 
 func main() {
 	user := examples.NewUserBuilder().
-		WithID(1).
-		WithName("Don").
-		WithEmail("don@example.com").
+		ID(1).
+		Name("Don").
+		Email("don@example.com").
 		Build()
 
 	fmt.Printf("User: %+v\n", user)

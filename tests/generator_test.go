@@ -24,14 +24,14 @@ func TestGenerate(t *testing.T) {
 		t.Fatalf("Error generating code: %v", err)
 	}
 
-	if !contains(code, "WithID") || !contains(code, "WithName") {
+	if !contains(code, "ID") || !contains(code, "Name") {
 		t.Errorf("Generated code missing methods:\n%s", code)
 	}
 
 	_ = os.WriteFile(os.TempDir()+"/test_output.go", []byte(code), 0644)
 }
 
-func TestGenerateWithDefaults(t *testing.T) {
+func TestGenerateDefaults(t *testing.T) {
 	def := "42"
 	meta := &model.StructMeta{
 		PackageName: "examples",
@@ -52,7 +52,7 @@ func TestGenerateWithDefaults(t *testing.T) {
 	}
 }
 
-func TestGenerateWithOmitempty(t *testing.T) {
+func TestGenerateOmitempty(t *testing.T) {
 	meta := &model.StructMeta{
 		PackageName: "examples",
 		Name:        "User",
@@ -72,7 +72,7 @@ func TestGenerateWithOmitempty(t *testing.T) {
 	}
 }
 
-func TestGenerateWithCollections(t *testing.T) {
+func TestGenerateCollections(t *testing.T) {
 	meta := &model.StructMeta{
 		PackageName: "examples",
 		Name:        "User",
@@ -101,7 +101,7 @@ func TestGenerateWithCollections(t *testing.T) {
 	}
 }
 
-func TestGenerateWithValidation(t *testing.T) {
+func TestGenerateValidation(t *testing.T) {
 	meta := &model.StructMeta{
 		PackageName: "examples",
 		Name:        "User",

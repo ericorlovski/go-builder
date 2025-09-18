@@ -7,7 +7,7 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 
 ## Features
 - Automatically generates builder structs for your Go types.
-- Chainable `With<Field>()` methods for each struct field.
+- Chainable `<Field>()` methods for each struct field.
 - `Build()` method to assemble the final struct.
 - Supports basic Go types: `int`, `string`, `bool`, `float64`, slices, maps, and pointers.
 - Works with `//go:generate` directive.
@@ -35,6 +35,31 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
     - Cover `time.Time`, `uuid.UUID`, and other common types.
 - **CLI improvements**
     - Add flags to configure generation (e.g. `--no-panic`, `--error-return`).
+
+---
+## Examples
+
+### Basic Example
+```go
+type User struct {
+    ID    int    `required:"true" default:"1"`
+    Name  string `omitempty:"true"`
+    Email string `validate:"email"`
+}
+
+// go:generate ../bin/gobuilder -type=User -file=user.go -output=user_builder.go
+
+func main() {
+    u := NewUserBuilder().
+        ID(1).
+        Name("Alice").
+        Email("alice@example.com").
+        Build()
+
+    fmt.Println(u)
+    // Output: {ID:1 Name:"Alice" Email:"alice@example.com"}
+}
+```
 
 ---
 

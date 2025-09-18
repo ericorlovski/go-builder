@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release of `go-builder`.
 - Support for generating Builder pattern for Go structs:
-    - Automatically creates `With<Field>()` methods for each struct field.
+    - Automatically creates `<Field>()` methods for each struct field.
     - Supports basic types (`int`, `string`, `bool`, `float64`).
     - Generates a `Build()` method for assembling the final struct.
 - Added support for the `//go:generate` directive for code generation.
@@ -99,3 +99,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved code style for `omitempty` (uses `!=` and explicit checks).
 - Updated test cases to match new validation and omitempty rules.
+
+---
+
+## [v0.5.1] - 2025-09-18
+### Changed
+- Builder methods no longer use the `With<Field>()` prefix.
+- Now methods are named directly after fields for cleaner DSL-like syntax.
+
+### Example
+**Before:**
+```go
+u := NewUserBuilder().
+    WithID(1).
+    WithName("Alice").
+    WithEmail("alice@example.com").
+    Build()

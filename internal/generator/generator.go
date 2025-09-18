@@ -29,8 +29,8 @@ func New{{.Name}}Builder() *{{.Name}}Builder {
 }
 
 {{range .Fields}}
-// With{{.Name}} sets the {{.Name}} field for {{$.Name}}
-func (b *{{$.Name}}Builder) With{{.Name}}(v {{.Type}}) *{{$.Name}}Builder {
+// {{.Name}} sets the {{.Name}} field for {{$.Name}}
+func (b *{{$.Name}}Builder) {{.Name}}(v {{.Type}}) *{{$.Name}}Builder {
 	b.{{lower .Name}} = v
 	return b
 }
