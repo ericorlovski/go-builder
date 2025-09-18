@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/username/go-builder/internal/generator"
-	"github.com/username/go-builder/internal/model"
+	"github.com/ericorlovski/go-builder/internal/generator"
+	"github.com/ericorlovski/go-builder/internal/model"
 )
 
 func TestGenerate(t *testing.T) {

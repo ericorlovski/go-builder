@@ -5,7 +5,7 @@ import (
 	"go/parser"
 	"go/token"
 
-	"github.com/username/go-builder/internal/model"
+	"github.com/ericorlovski/go-builder/internal/model"
 )
 
 func ParseStruct(filename, structName string) (*model.StructMeta, error) {

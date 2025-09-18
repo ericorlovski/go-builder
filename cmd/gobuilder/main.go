@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/username/go-builder/internal/generator"
-	"github.com/username/go-builder/internal/parser"
+	"github.com/ericorlovski/go-builder/internal/generator"
+	"github.com/ericorlovski/go-builder/internal/parser"
 )
 
 func main() {

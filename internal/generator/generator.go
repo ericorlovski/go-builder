@@ -5,7 +5,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/username/go-builder/internal/model"
+	"github.com/ericorlovski/go-builder/internal/model"
 )
 
 const builderTpl = `
