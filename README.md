@@ -24,6 +24,20 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 
 ---
 
+## Roadmap
+
+### Planned for v0.6.0
+- **Custom validation functions**
+    - Allow developers to plug in their own validation logic (e.g. `validate:"custom=IsValidUsername"`).
+- **Error reporting instead of panic**
+    - Option to return `error` from `Build()` instead of panicking (configurable).
+- **Better type support**
+    - Cover `time.Time`, `uuid.UUID`, and other common types.
+- **CLI improvements**
+    - Add flags to configure generation (e.g. `--no-panic`, `--error-return`).
+
+---
+
 ## Installation
 ```bash
 go install github.com/ericorlovski/go-builder/cmd/gobuilder@latest
