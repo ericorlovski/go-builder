@@ -72,3 +72,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v0.4.0] - 2025-09-20
+### Added
+- `omitempty:"true"` support extended to:
+    - **slices (`[]T`)** → skipped if `len(slice) == 0`
+    - **maps (`map[K]V`)** → skipped if `nil` or `len(map) == 0`
+    - **pointers (`*T`)** → skipped if `nil`
+- New generator logic: `isZero` and `notZero` helpers for clean condition generation.
+- Extended test coverage for slice, map, and pointer handling.
+
+### Improved
+- Generated code now uses idiomatic conditions:
+    - `if len(b.tags) > 0 { ... }`
+    - `if b.data != nil && len(b.data) > 0 { ... }`
+    - `if b.ref != nil { ... }`
+
+---

@@ -39,7 +39,7 @@ func (b *{{.Name}}Builder) Build() {{.Name}} {
 	// Required checks
 	{{- range .Fields}}
 		{{- if .Required}}
-	if {{zeroCheck .Type (printf "b.%s" (lower .Name))}} {
+	if {{isZero .Type (printf "b.%s" (lower .Name))}} {
 		panic("{{$.Name}}.{{.Name}} is required")
 	}
 		{{- end}}
@@ -50,7 +50,7 @@ func (b *{{.Name}}Builder) Build() {{.Name}} {
 	// Assign fields
 	{{- range .Fields}}
 		{{- if .Omitempty}}
-	if !({{zeroCheck .Type (printf "b.%s" (lower .Name))}}) {
+	if {{notZero .Type (printf "b.%s" (lower .Name))}} {
 		obj.{{.Name}} = b.{{lower .Name}}
 	}
 		{{- else}}
@@ -69,7 +69,6 @@ func Generate(meta *model.StructMeta) (string, error) {
 				return s
 			}
 			if strings.ToUpper(s) == s {
-				// for cases like ID, UUID
 				return strings.ToLower(s)
 			}
 			return strings.ToLower(s[:1]) + s[1:]
@@ -87,16 +86,40 @@ func Generate(meta *model.StructMeta) (string, error) {
 				return fmt.Sprintf("%q", def)
 			}
 		},
-		"zeroCheck": func(typ, varName string) string {
-			switch typ {
-			case "int", "int64", "float64":
+		"isZero": func(typ, varName string) string {
+			switch {
+			case typ == "int" || typ == "int64" || typ == "float64":
 				return fmt.Sprintf("%s == 0", varName)
-			case "string":
+			case typ == "string":
 				return fmt.Sprintf("%s == \"\"", varName)
-			case "bool":
+			case typ == "bool":
 				return fmt.Sprintf("!%s", varName)
+			case strings.HasPrefix(typ, "[]"):
+				return fmt.Sprintf("len(%s) == 0", varName)
+			case strings.HasPrefix(typ, "map["):
+				return fmt.Sprintf("%s == nil || len(%s) == 0", varName, varName)
+			case strings.HasPrefix(typ, "*"):
+				return fmt.Sprintf("%s == nil", varName)
 			default:
 				return fmt.Sprintf("%s == nil", varName)
+			}
+		},
+		"notZero": func(typ, varName string) string {
+			switch {
+			case typ == "int" || typ == "int64" || typ == "float64":
+				return fmt.Sprintf("%s != 0", varName)
+			case typ == "string":
+				return fmt.Sprintf("%s != \"\"", varName)
+			case typ == "bool":
+				return fmt.Sprintf("%s", varName) // true остаётся
+			case strings.HasPrefix(typ, "[]"):
+				return fmt.Sprintf("len(%s) > 0", varName)
+			case strings.HasPrefix(typ, "map["):
+				return fmt.Sprintf("%s != nil && len(%s) > 0", varName, varName)
+			case strings.HasPrefix(typ, "*"):
+				return fmt.Sprintf("%s != nil", varName)
+			default:
+				return fmt.Sprintf("%s != nil", varName)
 			}
 		},
 	}

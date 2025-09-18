@@ -5,7 +5,7 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 
 ---
 
-## Features
+## ✨ Features
 - Automatically generates builder structs for your Go types.
 - Chainable `With<Field>()` methods for each struct field.
 - `Build()` method to assemble the final struct.
@@ -13,12 +13,11 @@ Inspired by Java's Lombok `@Builder`, but implemented natively for Go using `go 
 - Works with `//go:generate` directive.
 - Simple CLI tool.
 - **New in v0.2.0:** Default values via struct tags (`default:"..."`).
-- **New in v0.3.0:**
-    - Required fields via struct tags (`required:"true"`).
-    - Omitempty support via struct tags (`omitempty:"true"`).
+- **New in v0.3.0:** Required fields (`required:"true"`) and `omitempty:"true"`.
+- **New in v0.4.0:** Extended `omitempty` for slices, maps, and pointers.
 
 ---
 
-## Installation
+## 📦 Installation
 ```bash
 go install github.com/ericorlovski/go-builder/cmd/gobuilder@latest

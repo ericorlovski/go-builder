@@ -72,6 +72,35 @@ func TestGenerateWithOmitempty(t *testing.T) {
 	}
 }
 
+func TestGenerateWithCollections(t *testing.T) {
+	meta := &model.StructMeta{
+		PackageName: "examples",
+		Name:        "User",
+		Fields: []model.Field{
+			{Name: "Tags", Type: "[]string", Omitempty: true},
+			{Name: "Data", Type: "map[string]int", Omitempty: true},
+			{Name: "Ref", Type: "*int", Omitempty: true},
+		},
+	}
+
+	code, err := generator.Generate(meta)
+	if err != nil {
+		t.Fatalf("Error generating code: %v", err)
+	}
+
+	checks := []string{
+		"if len(b.tags) > 0 {",
+		"if b.data != nil && len(b.data) > 0 {",
+		"if b.ref != nil {",
+	}
+
+	for _, c := range checks {
+		if !strings.Contains(code, c) {
+			t.Errorf("Missing check: %s\n%s", c, code)
+		}
+	}
+}
+
 func contains(s, substr string) bool {
 	return strings.Contains(s, substr)
 }
