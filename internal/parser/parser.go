@@ -4,6 +4,8 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"reflect"
+	"strings"
 
 	"github.com/ericorlovski/go-builder/internal/model"
 )
@@ -36,7 +38,20 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 			}
 			name := field.Names[0].Name
 			typ := exprToString(field.Type)
-			meta.Fields = append(meta.Fields, model.Field{Name: name, Type: typ})
+
+			var def *string
+			if field.Tag != nil {
+				tag := reflect.StructTag(strings.Trim(field.Tag.Value, "`"))
+				if val, ok := tag.Lookup("default"); ok {
+					def = &val
+				}
+			}
+
+			meta.Fields = append(meta.Fields, model.Field{
+				Name:    name,
+				Type:    typ,
+				Default: def,
+			})
 		}
 		return false
 	})
