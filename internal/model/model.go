@@ -6,6 +6,7 @@ type Field struct {
 }
 
 type StructMeta struct {
-	Name   string
-	Fields []Field
+	PackageName string
+	Name        string
+	Fields      []Field
 }

@@ -9,6 +9,8 @@ import (
 )
 
 const builderTpl = `
+package {{.PackageName}}
+
 type {{.Name}}Builder struct {
 	{{- range .Fields}}
 	{{lower .Name}} {{.Type}}

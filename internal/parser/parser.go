@@ -17,6 +17,7 @@ func ParseStruct(filename, structName string) (*model.StructMeta, error) {
 
 	var meta model.StructMeta
 	meta.Name = structName
+	meta.PackageName = node.Name.Name
 
 	ast.Inspect(node, func(n ast.Node) bool {
 		ts, ok := n.(*ast.TypeSpec)
